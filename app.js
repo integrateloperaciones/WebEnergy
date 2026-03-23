@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbw65BC0_WSBNuSUExE-an7B6X8KrN7WRYsW9loef9woVFbSUX_e77cWv28mjsGxKYw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwKVCjaywuu4GQYgo9iV19-V5dHbrY6HiAq744t2IX3EAL61OW3hQfzA2xJ5FK_0rLiaQ/exec";
 
 function mostrarFormulario(tipo) {
   document.getElementById("impedancia").style.display = "none";
