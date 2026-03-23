@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pruebas UPS</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="menu">
+      <button type="button" onclick="mostrarFormulario('impedancia')">IMPEDANCIA</button>
+      <button type="button" onclick="mostrarFormulario('descarga')">DESCARGA</button>
+    </div>
+
+    <!-- ================= IMPEDANCIA ================= -->
+    <div id="impedancia">
+
+      <div id="exportImpedancia">
+        <div class="titulo-principal">
+          <h1>PRUEBA DE IMPEDANCIA | RESISTENCIA INTERNA</h1>
+        </div>
+
+        <div class="card">
+          <h2>DATOS GENERALES</h2>
+
+          <div class="grid">
+            <div class="campo">
+              <label for="fecha">Fecha</label>
+              <input id="fecha" type="date">
+            </div>
+
+            <div class="campo">
+              <label for="registro">N° Registro</label>
+              <select id="registro">
+                <option value="">Seleccione</option>
+                <option value="R1">R1</option>
+                <option value="R2">R2</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="cu">CU</label>
+              <input id="cu" type="text" placeholder="Ingrese CU">
+            </div>
+
+            <div class="campo">
+              <label for="local">Local</label>
+              <input id="local" type="text" placeholder="Ingrese local">
+            </div>
+
+            <div class="campo">
+              <label for="ups">RECTIFICADOR | UPS</label>
+              <select id="ups">
+                <option value="">Seleccione</option>
+                <option value="REC01">REC01</option>
+                <option value="REC02">REC02</option>
+                <option value="REC03">REC03</option>
+                <option value="UPS01">UPS01</option>
+                <option value="UPS02">UPS02</option>
+                <option value="UPS03">UPS03</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="num_bancos">N° Banco</label>
+              <select id="num_bancos">
+                <option value="">Seleccione</option>
+                <option value="BB1">BB1</option>
+                <option value="BB2">BB2</option>
+                <option value="BB3">BB3</option>
+                <option value="BB4">BB4</option>
+                <option value="BB5">BB5</option>
+                <option value="BB6">BB6</option>
+                <option value="BB7">BB7</option>
+                <option value="BB8">BB8</option>
+                <option value="BB9">BB9</option>
+                <option value="BB10">BB10</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="marca">Marca</label>
+              <input id="marca" type="text" placeholder="Ingrese marca">
+            </div>
+
+            <div class="campo">
+              <label for="modelo_equipo">Modelo</label>
+              <input id="modelo_equipo" type="text" placeholder="Ingrese modelo">
+            </div>
+
+            <div class="campo">
+              <label for="capacidad">Capacidad</label>
+              <input id="capacidad" type="number" step="0.01" placeholder="Ingrese capacidad">
+            </div>
+
+            <div class="campo">
+              <label for="fecha_fabricacion">Fecha de fabricación</label>
+              <input id="fecha_fabricacion" type="date">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="reporte">
+          <h2>DETALLE POR CELDA</h2>
+
+          <div class="detalle-superior no-pdf">
+            <div class="acciones-detalle">
+              <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" onchange="cargarExcel(event)">
+              <button type="button" onclick="descargarPlantilla()">Descargar plantilla</button>
+              <button type="button" onclick="agregarFila()">Agregar fila</button>
+            </div>
+          </div>
+
+          <table id="tabla">
+            <thead>
+              <tr>
+                <th>N° Banco</th>
+                <th>N° Celda</th>
+                <th>V reposo (V)</th>
+                <th>Fecha fabricación</th>
+                <th>RI Origen</th>
+                <th>RI Impedancia</th>
+                <th>Resultado</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="acciones-finales no-pdf">
+            <button type="button" onclick="guardarDatos()">Guardar</button>
+            <button type="button" onclick="exportarPDF()">Exportar Reporte</button>
+            <button type="button" onclick="limpiar()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= DESCARGA ================= -->
+    <div id="descarga" style="display:none;">
+
+      <div id="exportDescarga">
+        <div class="titulo-principal titulo-descarga">
+          <h1>DESCARGA CONTROLADA POR BANCO</h1>
+        </div>
+
+        <div class="card">
+          <h2>DATOS GENERALES</h2>
+
+          <div class="grid">
+            <div class="campo">
+              <label for="d_fecha">Fecha</label>
+              <input id="d_fecha" type="date">
+            </div>
+
+            <div class="campo">
+              <label for="d_registro">N° Registro</label>
+              <select id="d_registro">
+                <option value="">Seleccione</option>
+                <option value="R1">R1</option>
+                <option value="R2">R2</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="d_cu">CU</label>
+              <input id="d_cu" type="text" placeholder="Ingrese CU">
+            </div>
+
+            <div class="campo">
+              <label for="d_local">Local</label>
+              <input id="d_local" type="text" placeholder="Ingrese local">
+            </div>
+
+            <div class="campo">
+              <label for="d_ups">RECTIFICADOR | UPS</label>
+              <select id="d_ups">
+                <option value="">Seleccione</option>
+                <option value="REC01">REC01</option>
+                <option value="REC02">REC02</option>
+                <option value="REC03">REC03</option>
+                <option value="UPS01">UPS01</option>
+                <option value="UPS02">UPS02</option>
+                <option value="UPS03">UPS03</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="d_num_bancos">N° Banco</label>
+              <select id="d_num_bancos">
+                <option value="">Seleccione</option>
+                <option value="BB1">BB1</option>
+                <option value="BB2">BB2</option>
+                <option value="BB3">BB3</option>
+                <option value="BB4">BB4</option>
+                <option value="BB5">BB5</option>
+                <option value="BB6">BB6</option>
+                <option value="BB7">BB7</option>
+                <option value="BB8">BB8</option>
+                <option value="BB9">BB9</option>
+                <option value="BB10">BB10</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="d_corriente_total">Corriente total (A)</label>
+              <input id="d_corriente_total" type="number" step="0.01" placeholder="Ingrese corriente total">
+            </div>
+
+            <div class="campo">
+              <label for="d_tiempo_descarga">Tiempo descarga (min)</label>
+              <input id="d_tiempo_descarga" type="number" step="1" placeholder="Ingrese tiempo descarga">
+            </div>
+
+            <div class="campo">
+              <label for="d_observacion">Observación</label>
+              <input id="d_observacion" type="text" placeholder="Ingrese observación">
+            </div>
+
+            <div class="campo">
+              <label for="d_shunt">SHUNT</label>
+              <input id="d_shunt" type="text" placeholder="Ingrese SHUNT">
+            </div>
+
+            <div class="campo">
+              <label for="d_c">C°</label>
+              <input id="d_c" type="number" step="0.01" placeholder="Ingrese temperatura">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="reporteDescarga">
+          <h2>DETALLE POR BANCO</h2>
+
+          <div class="detalle-superior no-pdf">
+            <div class="acciones-detalle">
+              <input type="file" id="archivoExcelDescarga" accept=".xlsx,.xls,.csv" onchange="cargarExcelDescarga(event)">
+              <button type="button" onclick="descargarPlantillaDescarga()">Descargar plantilla</button>
+              <button type="button" onclick="agregarFilaDescarga()">Agregar fila</button>
+            </div>
+          </div>
+
+          <table id="tablaDescarga">
+            <thead>
+              <tr>
+                <th>N° Banco</th>
+                <th>Disyuntor (A)</th>
+                <th>I estable (A)</th>
+                <th>I máx (A)</th>
+                <th>% aporte</th>
+                <th>Cables x Polos</th>
+                <th>Calibre cable</th>
+                <th>Longitud cable</th>
+                <th>Med1_Voltaje (1 min)</th>
+                <th>Med1_Carga (A)</th>
+                <th>Med2_Voltaje (10 min)</th>
+                <th>Med2_Carga (A)</th>
+                <th>Med3_Voltaje (20 min)</th>
+                <th>Med3_Carga (A)</th>
+                <th>Med4_Voltaje (30 min)</th>
+                <th>Med4_Carga (A)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="acciones-finales no-pdf">
+            <button type="button" onclick="guardarDatosDescarga()">Guardar</button>
+            <button type="button" onclick="exportarPDFDescarga()">Exportar Reporte</button>
+            <button type="button" onclick="limpiarDescarga()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
